@@ -80,10 +80,10 @@ function MenuPage() {
                   {section.items.map((item) => <article key={item.id} className="border-b border-border py-5">
                     <div className="flex items-start justify-between gap-4">
                       <h3 className="text-base font-extrabold leading-snug">{item.name}</h3>
-                      {item.options.length === 1 && !item.options[0].name && <span className="shrink-0 font-bold text-primary">£{item.options[0].price.toFixed(2)}</span>}
+                      {item.options.length === 1 && item.options.filter((option) => !option.name).map((option) => <span key={option.price} className="shrink-0 font-bold text-primary">£{option.price.toFixed(2)}</span>)}
                     </div>
                     {item.description && <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{item.description}</p>}
-                    {(item.options.length > 1 || item.options[0].name) && <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                    {(item.options.length > 1 || item.options.some((option) => !!option.name)) && <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
                       {item.options.map((option) => <span key={option.name} className="inline-flex gap-2"><span className="text-muted-foreground">{option.name}</span><strong className="text-primary">£{option.price.toFixed(2)}</strong></span>)}
                     </div>}
                   </article>)}

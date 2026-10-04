@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const NAV = [["Menu", "/menu"], ["Offers", "#offers"], ["Reviews", "#reviews"], ["About", "#about"], ["Contact", "#contact"]];
+const NAV = [["Menu", "/menu"], ["Offers", "#offers"], ["Reviews", "#reviews"], ["About", "#about"], ["Contact", "#contact"]] as const;
 
 function OrderBtn({ children = "Order Online", className = "" }: { children?: React.ReactNode; className?: string }) {
   return (
@@ -44,14 +44,14 @@ function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5">
         <a href="#top" className="font-display text-2xl font-black tracking-tight">Balti<span className="text-primary"> Village</span></a>
         <nav className="hidden items-center gap-8 md:flex">
-          {NAV.map(([l, h]) => h.startsWith("/") ? <Link key={h} to={h} className="text-sm font-medium opacity-85 hover:text-primary hover:opacity-100">{l}</Link> : <a key={h} href={h} className="text-sm font-medium opacity-85 hover:text-primary hover:opacity-100">{l}</a>)}
+          {NAV.map(([l, h]) => h === "/menu" ? <Link key={h} to="/menu" className="text-sm font-medium opacity-85 hover:text-primary hover:opacity-100">{l}</Link> : <a key={h} href={h} className="text-sm font-medium opacity-85 hover:text-primary hover:opacity-100">{l}</a>)}
           <OrderBtn className="!px-5 !py-2.5" />
         </nav>
         <button aria-label="Menu" onClick={() => setOpen(!open)} className="md:hidden text-3xl leading-none">{open ? "×" : "≡"}</button>
       </div>
       {open && (
         <nav className="flex flex-col gap-4 bg-background px-5 py-6 md:hidden">
-          {NAV.map(([l, h]) => h.startsWith("/") ? <Link key={h} to={h} onClick={() => setOpen(false)} className="text-lg">{l}</Link> : <a key={h} href={h} onClick={() => setOpen(false)} className="text-lg">{l}</a>)}
+          {NAV.map(([l, h]) => h === "/menu" ? <Link key={h} to="/menu" onClick={() => setOpen(false)} className="text-lg">{l}</Link> : <a key={h} href={h} onClick={() => setOpen(false)} className="text-lg">{l}</a>)}
         </nav>
       )}
     </header>
@@ -274,7 +274,7 @@ function Footer() {
     <footer className="mx-auto max-w-7xl px-5 pb-28 pt-16 text-sm text-muted-foreground md:pb-12">
       <div className="grid gap-8 md:grid-cols-4">
         <div><div className="font-display text-2xl font-black text-foreground">Balti Village</div><p className="mt-2">Indian food & takeaway, Harpenden.</p></div>
-        <div className="flex flex-col gap-1">{NAV.map(([l, h]) => h.startsWith("/") ? <Link key={h} to={h} className="hover:text-primary">{l}</Link> : <a key={h} href={h} className="hover:text-primary">{l}</a>)}</div>
+        <div className="flex flex-col gap-1">{NAV.map(([l, h]) => h === "/menu" ? <Link key={h} to="/menu" className="hover:text-primary">{l}</Link> : <a key={h} href={h} className="hover:text-primary">{l}</a>)}</div>
         <div><p>{SITE.address}</p><a href={SITE.phoneHref} className="hover:text-primary">{SITE.phone}</a></div>
         <div><p>Every day {SITE.hours.open} – {SITE.hours.close}</p><p className="mt-2">Food hygiene: {SITE.hygiene}</p></div>
       </div>
