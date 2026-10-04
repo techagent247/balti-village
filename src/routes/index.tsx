@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import heroVideo from "@/assets/hero.mp4.asset.json";
 import poster from "@/assets/poster.jpg";
@@ -13,12 +13,14 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Hot, fresh Indian food from Balti Village, Harpenden. Curries, biryani, balti and tandoori for delivery or collection. 10% off collection over £10." },
       { property: "og:title", content: "Balti Village — Indian Takeaway in Harpenden" },
       { property: "og:description", content: "Hot. Fresh. Full of flavour. Order delivery or collection online." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
 });
 
-const NAV = [["Menu", "#menu"], ["Offers", "#offers"], ["Reviews", "#reviews"], ["About", "#about"], ["Contact", "#contact"]];
+const NAV = [["Menu", "/menu"], ["Offers", "#offers"], ["Reviews", "#reviews"], ["About", "#about"], ["Contact", "#contact"]];
 
 function OrderBtn({ children = "Order Online", className = "" }: { children?: React.ReactNode; className?: string }) {
   return (
@@ -42,14 +44,14 @@ function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5">
         <a href="#top" className="font-display text-2xl font-black tracking-tight">Balti<span className="text-primary"> Village</span></a>
         <nav className="hidden items-center gap-8 md:flex">
-          {NAV.map(([l, h]) => <a key={h} href={h} className="text-sm font-medium opacity-85 hover:text-primary hover:opacity-100">{l}</a>)}
+          {NAV.map(([l, h]) => h.startsWith("/") ? <Link key={h} to={h} className="text-sm font-medium opacity-85 hover:text-primary hover:opacity-100">{l}</Link> : <a key={h} href={h} className="text-sm font-medium opacity-85 hover:text-primary hover:opacity-100">{l}</a>)}
           <OrderBtn className="!px-5 !py-2.5" />
         </nav>
         <button aria-label="Menu" onClick={() => setOpen(!open)} className="md:hidden text-3xl leading-none">{open ? "×" : "≡"}</button>
       </div>
       {open && (
         <nav className="flex flex-col gap-4 bg-background px-5 py-6 md:hidden">
-          {NAV.map(([l, h]) => <a key={h} href={h} onClick={() => setOpen(false)} className="text-lg">{l}</a>)}
+          {NAV.map(([l, h]) => h.startsWith("/") ? <Link key={h} to={h} onClick={() => setOpen(false)} className="text-lg">{l}</Link> : <a key={h} href={h} onClick={() => setOpen(false)} className="text-lg">{l}</a>)}
         </nav>
       )}
     </header>
@@ -68,7 +70,7 @@ function Hero() {
         <p className="animate-rise mt-3 max-w-md opacity-85" style={{ animationDelay: ".25s" }}>Order your favourites for delivery or collection.</p>
         <div className="animate-rise mt-8 flex flex-wrap gap-3" style={{ animationDelay: ".35s" }}>
           <OrderBtn />
-          <a href="#menu" className="inline-flex items-center rounded-full border border-foreground/40 px-7 py-3.5 text-sm font-extrabold uppercase tracking-wider hover:bg-foreground/10">View Menu</a>
+          <Link to="/menu" className="inline-flex items-center rounded-full border border-foreground/40 px-7 py-3.5 text-sm font-extrabold uppercase tracking-wider hover:bg-foreground/10">View Menu</Link>
         </div>
       </div>
     </section>
@@ -128,11 +130,11 @@ function Categories() {
         <p className="mt-3 opacity-70">Explore our menu and discover something delicious.</p>
         <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {CATEGORIES.map((c, i) => (
-            <a key={c} href={SITE.orderUrl} target="_blank" rel="noreferrer"
+            <Link key={c} to="/menu" hash={c.toLowerCase().replaceAll("&", "").replaceAll("'", "").replace(/\s+/g, "-").replace(/-+/g, "-")}
               className="group flex aspect-[4/3] flex-col justify-between rounded-xl bg-charcoal p-5 text-cream transition hover:-translate-y-1 hover:bg-chilli">
               <span className="text-xs font-bold text-primary group-hover:text-cream">{String(i + 1).padStart(2, "0")}</span>
               <span className="font-display text-xl font-bold leading-tight md:text-2xl">{c}</span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
@@ -272,7 +274,7 @@ function Footer() {
     <footer className="mx-auto max-w-7xl px-5 pb-28 pt-16 text-sm text-muted-foreground md:pb-12">
       <div className="grid gap-8 md:grid-cols-4">
         <div><div className="font-display text-2xl font-black text-foreground">Balti Village</div><p className="mt-2">Indian food & takeaway, Harpenden.</p></div>
-        <div className="flex flex-col gap-1">{NAV.map(([l, h]) => <a key={h} href={h} className="hover:text-primary">{l}</a>)}</div>
+        <div className="flex flex-col gap-1">{NAV.map(([l, h]) => h.startsWith("/") ? <Link key={h} to={h} className="hover:text-primary">{l}</Link> : <a key={h} href={h} className="hover:text-primary">{l}</a>)}</div>
         <div><p>{SITE.address}</p><a href={SITE.phoneHref} className="hover:text-primary">{SITE.phone}</a></div>
         <div><p>Every day {SITE.hours.open} – {SITE.hours.close}</p><p className="mt-2">Food hygiene: {SITE.hygiene}</p></div>
       </div>
@@ -284,7 +286,7 @@ function Footer() {
 function MobileBar() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 gap-2 border-t bg-background/95 p-3 backdrop-blur md:hidden">
-      <a href="#menu" className="rounded-full border py-3 text-center text-xs font-bold uppercase">Menu</a>
+      <Link to="/menu" className="rounded-full border py-3 text-center text-xs font-bold uppercase">Menu</Link>
       <a href={SITE.orderUrl} target="_blank" rel="noreferrer" className="rounded-full bg-primary py-3 text-center text-xs font-extrabold uppercase text-primary-foreground">Order</a>
       <a href={SITE.phoneHref} className="rounded-full border py-3 text-center text-xs font-bold uppercase">Call</a>
     </div>
